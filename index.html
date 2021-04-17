@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="robots" content="all" />
+    <meta name="description" content="#" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>色当て</title>
+    <style>
+      /*    クイズの色を表示する円を作成*/
+      .question {
+        background: #ff0;
+        height: 100px;
+        width: 100px;
+        border-radius: 50%;
+        -moz-border-radius: 50%;
+        -webkit-border-radius: 50%;
+      }
+    </style>
+    <!--  tailwindcssでスタイリング-->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css"
+    />
+    <!--javascriptでの処理-->
+    <script>
+      //buttonタグの要素の数を取得
+      const quizLen = 5;
+      let quizIndex = 0;
+      let score = 0;
+      let $buttonCount;
+      let quizCount = 0;
+      let selectcolor = [];
+      let questionNum;
+      let correct;
+
+      window.addEventListener("DOMContentLoaded", () => {
+        $buttonCount = document.getElementsByTagName("button").length;
+
+        //色を生成する
+        let randomColors = [];
+        let colors = 0;
+        const createColor = () => {
+          while (colors < $buttonCount) {
+            let color = Math.floor(Math.random() * 16777215).toString(16);
+            for (count = color.length; count < 6; count++) {
+              color = "0" + color;
+            }
+            randomColors.push("#" + color);
+            colors++;
+            console.log("51:" + randomColors);
+          }
+        };
+        //カラーコードを回答に入れる
+
+        const setQuiz = () => {
+          createColor();
+          selectcolor.push(randomColors[0], randomColors[1], randomColors[2]);
+          console.log("59:" + selectcolor);
+          questionNum = Math.ceil(Math.random() * 3) - 1;
+          correct = randomColors[questionNum];
+        };
+
+        //ヒントボタンで不正解を一つ消す(fadeOutさせる)
+        //ダークモードのラジオボタンを設置する
+        //buttonをクリックしたら正誤判定をする
+        let checkCount = 0;
+        const init = () => {
+          $(function () {
+            createColor();
+            setQuiz();
+            //それぞれのボタンに文字を設定する
+            $("#button1").html(selectcolor[0]);
+            $("#button2").html(selectcolor[1]);
+            $("#button3").html(selectcolor[2]);
+            //      背景の色を設定して、画面に表示させる
+            $(".question")
+              .css("background", randomColors[questionNum])
+              .delay(1000)
+              .animate({ opacity: 1 }, 500);
+            //      問題が表示された後に回答を表示させる
+            $("button").delay(2000).animate({ opacity: 1 }, 500);
+            //
+          });
+        };
+
+        //5問目なら終了。それ以外ならクイズをリロード
+        const goToNext = () => {
+          quizCount++;
+          if (quizCount < quizLen) {
+            console.log("91");
+            init(quizCount);
+          } else {
+            // $window.alert('クイズ終了！');
+            console.log("95");
+            window.alert(
+              "あなたの正解数は" + score + "/" + quizLen + "です！！"
+            );
+          }
+        };
+        //正誤判定の処理
+        const judge = (elm) => {
+          // console.log(elm);
+          if (correct === elm.innerHTML) {
+            window.alert("正解！！！");
+            //正解時にscoreを足す
+            score++;
+          } else {
+            window.alert("不正解・・・");
+          }
+          goToNext();
+        };
+        // console.log(checkCount + "   " + $buttonCount);
+        while (checkCount < $buttonCount) {
+          document
+            .getElementsByTagName("button")
+            [checkCount].addEventListener("click", (e) => {
+              judge(e.target);
+            });
+          checkCount++;
+        }
+        // document
+        //   .getElementsByTagName("button")[0]
+        //   .addEventListener("click", (e) => {
+        //     if (correct === e.target.innerHTML) {
+        //       window.alert("正解！！！");
+        //       //正解時にscoreを足す
+        //     } else {
+        //       window.alert("不正解・・・");
+        //     }
+
+        init();
+        //リファクタリングする
+
+        //次の問題を表示させる(5問分繰り返す)
+        //結果を表示させる
+        // $(function () {
+        //   //それぞれのボタンに文字を設定する
+        //   $("#button1").html(color[0]);
+        //   $("#button2").html(color[1]);
+        //   $("#button3").html(color[2]);
+        //   //      背景の色を設定して、画面に表示させる
+        //   $(".question")
+        //     .css("background", randomColors[questionNum])
+        //     .delay(1000)
+        //     .animate({ opacity: 1 }, 500);
+        //   //      問題が表示された後に回答を表示させる
+        //   $("button").delay(2000).animate({ opacity: 1 }, 500);
+        //   //
+        // });
+      });
+    </script>
+    <!--↓jQuery基本構文-->
+    <script
+      type="text/javascript"
+      src="https://code.jquery.com/jquery-3.5.1.min.js"
+    ></script>
+
+    <!-- ↓jQuery -->
+    <script></script>
+  </head>
+  <!-- 本文ここから -->
+  <body class="font-sans bg-gray-300 mx-auto text-gray-700">
+    <h1 class="flex justify-center text-4xl mt-5">この色はなんでしょう？</h1>
+    <!--  クイズの色を表示-->
+    <div class="flex flex-wrap justify-center mt-10">
+      <p class="question opacity-0"></p>
+    </div>
+    <!--  回答を表示-->
+    <div class="text-center mt-20">
+      <!--    1st-button-->
+      <button
+        id="button1"
+        class="bg-blueGray-500 active:bg-blueGray-600 font-bold uppercase text-base px-8 py-3 rounded shadow-md hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150 mr-10 opacity-0 text-2xl"
+        type="button"
+      >
+        color1
+      </button>
+      <!--    2nd-button-->
+      <button
+        id="button2"
+        class="bg-blueGray-500 active:bg-blueGray-600 font-bold uppercase text-base px-8 py-3 rounded shadow-md hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150 mr-10 opacity-0 text-2xl"
+        type="button"
+      >
+        color2
+      </button>
+      <!--    3rd-button-->
+      <button
+        id="button3"
+        class="bg-blueGray-500 active:bg-blueGray-600 font-bold uppercase text-base px-8 py-3 rounded shadow-md hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150 opacity-0 text-2xl"
+        type="button"
+      >
+        color3
+      </button>
+    </div>
+  </body>
+</html>
