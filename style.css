@@ -1,0 +1,9 @@
+/*    クイズの色を表示する円を作成*/
+.question {
+  background: #ff0;
+  height: 200px;
+  width: 200px;
+  border-radius: 40%;
+  -moz-border-radius: 40%;
+  -webkit-border-radius: 40%;
+}
