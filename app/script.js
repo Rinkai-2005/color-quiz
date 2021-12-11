@@ -13,7 +13,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
   //ランダムに色を生成する
   let randomColors = [];
-  const createColor = () => {
+  const createRandomColors = () => {
     while (randomColors.length < buttonCount) {
       let color = Math.floor(Math.random() * 16777215).toString(16);
       for (count = color.length; count < 6; count++) {
@@ -26,8 +26,9 @@ window.addEventListener("DOMContentLoaded", () => {
 
   //カラーコードを回答に入れる
   const setQuiz = () => {
-    createColor();
-    // choiceColors.push(randomColors[0], randomColors[1], randomColors[2]);
+    randomColors = [];
+    createRandomColors();
+    choiceColors = [];
     for (let choiceColor of randomColors) {
       choiceColors.push(choiceColor);
     }
