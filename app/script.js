@@ -32,10 +32,16 @@ window.addEventListener("DOMContentLoaded", () => {
     for (let choiceColor of randomColors) {
       choiceColors.push(choiceColor);
     }
-    console.log("59:" + choiceColors);
     //選択肢の中のどこに正解を入れるかの処理
     questionNum = Math.ceil(Math.random() * 3) - 1;
     correct = randomColors[questionNum];
+  };
+  // 選択肢のDOMを取得し遅延表示させる
+  const $choicesAnimation = () => {
+    const $choices = document.querySelectorAll(".choice");
+    $choices.forEach(($choices) => {
+      $choices.animate({ opacity: [0, 1] }, 400);
+    });
   };
 
   //ヒントボタンで不正解を一つ消す(fadeOutさせる)
@@ -45,17 +51,14 @@ window.addEventListener("DOMContentLoaded", () => {
   const init = () => {
     setQuiz();
     //それぞれのボタンに文字を設定する
-    $("#button1").html(choiceColors[0]);
-    $("#button2").html(choiceColors[1]);
-    $("#button3").html(choiceColors[2]);
+    document.querySelector("#button1").textContent = choiceColors[0];
+    document.querySelector("#button2").textContent = choiceColors[1];
+    document.querySelector("#button3").textContent = choiceColors[2];
     //      背景の色を設定して、画面に表示させる
-    $(".question")
-      .css("background", randomColors[questionNum])
-      .delay(1000)
-      .animate({ opacity: 1 }, 500);
-    //      問題が表示された後に回答を表示させる
-    $("button").delay(2000).animate({ opacity: 1 }, 500);
-    //
+    const $question = document.querySelector(".question");
+    $question.style.background = randomColors[questionNum];
+    $question.animate({ opacity: [0.2, 1] }, 200);
+    $choicesAnimation;
   };
 
   //5問目なら終了。それ以外ならクイズをリロード
